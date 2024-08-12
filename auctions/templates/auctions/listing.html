@@ -1,0 +1,77 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1>Listing : {{ listing.name }}</h1>
+
+    {% if watchlist %}
+    <form action="{% url 'remove_watchlist' listing_id=listing.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-primary" value="Remove from Watchlist">
+    </form>
+    {% else %}
+    <form action="{% url 'add_watchlist' listing_id=listing.id %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-primary" value="Add to Watchlist">
+    </form>
+    {% endif %}
+
+    {% if listing.image %}
+    <img src="{{ listing.image }}">
+    {% else %}
+    <img src="default-image.jpg">
+    {% endif %}
+    <p>{{ listing.description }}</p>
+
+    <h2>
+        ${{ listing.price }} 
+
+        {% if check %}
+            bid by {{ bidder }}
+        {% else %}
+            No Bids
+        {% endif %}
+    </h2>
+
+    {% if active %}
+        {% if listing.user != user %}
+        <form action="{% url 'place_bid' listing_id=listing.id %}" method="post">
+            {% csrf_token %}
+            <input type="number" name="bid_amount" class="form-control">
+            <input type="submit" class="btn btn-primary" value="Bid!!">
+        </form>
+        {% else %}
+        <form action="{% url 'close_bid' listing_id=listing.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-primary" value="Close Bid">
+        </form>
+        {% endif %}
+    {% else %}
+        <h5>This Listing Is Closed</h5>
+    {% endif %}
+    <h3>Details</h3>
+    <ul>
+        <li>Listed by: {{ listing.user }}</li>
+        {% if listing.category %} <li> Category: {{ listing.category }}</li> {% else %} <li>Category: No Category Listed</li> {% endif %}
+        <li>Created at: {{ listing.created_at }}</li>
+    </ul> 
+
+    <h3>Comments</h3>
+    {% if comments %}
+    <section class="list-section">
+        {% for c in comments %}
+        <div class="list-card">
+            <p>By {{ c.user }}</p>
+            <p>{{ c.comment }}</p>
+        </div>
+        {% endfor %}
+    </section>
+    {% else %}
+            <p>No Comments yet</p>
+    {% endif %}
+    <h4>Add A Comment</h4>
+    <form action="{% url 'add_comment' listing_id=listing.id %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="new_comment" class="form-control">
+        <input type="submit" class="btn btn-primary">
+    </form>
+{% endblock %}
