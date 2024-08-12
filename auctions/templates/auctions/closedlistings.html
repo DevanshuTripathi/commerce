@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Closed Listings</h2>
     {% if listing %}
     <section class="list-section">
     {% for list in listing %}
@@ -26,6 +26,6 @@
     {% endfor %}
     </section>
     {% else %}
-    <h5>No Active Listings</h5>
+    <h5>No Closed Listings</h5>
     {% endif %}
 {% endblock %}

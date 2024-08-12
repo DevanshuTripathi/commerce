@@ -38,6 +38,15 @@
             {% csrf_token %}
             <input type="number" name="bid_amount" class="form-control">
             <input type="submit" class="btn btn-primary" value="Bid!!">
+            {% if messages %}
+                <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                          <h5>{{ message }}</h5>
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
         </form>
         {% else %}
         <form action="{% url 'close_bid' listing_id=listing.id %}" method="post">
@@ -46,7 +55,11 @@
         </form>
         {% endif %}
     {% else %}
-        <h5>This Listing Is Closed</h5>
+        {% if user == bidder %}
+        <h5>This Listing is Won by YOU!!!!</h5>
+        {% else %}
+        <h5>This Listing Is Won by {{ bidder }}</h5>
+        {% endif %}
     {% endif %}
     <h3>Details</h3>
     <ul>
@@ -55,23 +68,25 @@
         <li>Created at: {{ listing.created_at }}</li>
     </ul> 
 
+    <hr>
     <h3>Comments</h3>
-    {% if comments %}
-    <section class="list-section">
-        {% for c in comments %}
-        <div class="list-card">
-            <p>By {{ c.user }}</p>
-            <p>{{ c.comment }}</p>
-        </div>
-        {% endfor %}
-    </section>
-    {% else %}
-            <p>No Comments yet</p>
-    {% endif %}
     <h4>Add A Comment</h4>
     <form action="{% url 'add_comment' listing_id=listing.id %}" method="post">
         {% csrf_token %}
         <input type="text" name="new_comment" class="form-control">
         <input type="submit" class="btn btn-primary">
     </form>
+    {% if comments %}
+    <section class="comment-section">
+        {% for c in comments %}
+        <div class="comment-card">
+            <p>By {{ c.user }}</p>
+            <p>{{ c.comment }}</p>
+            <hr>
+        </div>
+        {% endfor %}
+    </section>
+    {% else %}
+            <p>No Comments yet</p>
+    {% endif %}
 {% endblock %}

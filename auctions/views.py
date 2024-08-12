@@ -114,7 +114,7 @@ def place_bid(request, listing_id):
         if bid.exists():
             highest_bid = bid.first()
             if bid_amount <= listing.price:
-                messages.error(request, "Your bid must be higher than the starting price.")
+                messages.error(request, "Your bid must be higher than the current price.")
             elif bid_amount <= highest_bid.bid:
                 messages.error(request, "Your bid must be higher than the current highest bid.")
             else:
@@ -170,7 +170,7 @@ def watchlist(request):
 
 def add_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-    watchlist=Watchlist.objects.filter(listing=listing)
+    watchlist=Watchlist.objects.filter(listing=listing, user=request.user)
     if request.method == "POST":
         if watchlist:
             watchlist[0].watchlist=True
@@ -183,7 +183,7 @@ def add_watchlist(request, listing_id):
 
 def remove_watchlist(request, listing_id):
     listing = Listing.objects.get(pk=listing_id)
-    watchlist=Watchlist.objects.get(listing=listing)
+    watchlist=Watchlist.objects.get(listing=listing, user=request.user)
     if request.method == "POST":
         watchlist.watchlist=False
         watchlist.save()
@@ -214,19 +214,30 @@ def make_listing(request):
     })
 
 
-# def categories(request):
-#     categories=Category.objects.all()
-#     return render(request, "auctions/categories.html", {
-#         "categories":categories
-#     })
+def categories(request):
+    categories=Category.objects.all()
+    return render(request, "auctions/categories.html", {
+        "categories":categories
+    })
 
-# def category(request, category_id):
-#     listing=Listing.listcategory.filter(categories=Category.objects.get(pk=category_id))
-#     active_listings = listing.objects.filter(activatelisting__active=True)
-#     for list in active_listings:
-#         bid=Bid.objects.filter(listing=list)
-#         highest_bid = bid.order_by('-bid').first()
-#         list.current_price = highest_bid.bid if highest_bid else list.price
-#     return render(request, "auctions/index.html", {
-#         "listing": active_listings,
-#     })
+def category(request, category_id):
+    category=Category.objects.get(pk=category_id)
+    listing=Listing.objects.filter(category=category, activatelisting__active=True)
+    for list in listing:
+        bid=Bid.objects.filter(listing=list)
+        highest_bid = bid.order_by('-bid').first()
+        list.current_price = highest_bid.bid if highest_bid else list.price
+    return render(request, "auctions/category.html", {
+        "listing": listing,
+    })
+
+
+def closed_listings(request):
+    closed_listings = Listing.objects.filter(activatelisting__active=False)
+    for list in closed_listings:
+        bid=Bid.objects.filter(listing=list)
+        highest_bid = bid.order_by('-bid').first()
+        list.current_price = highest_bid.bid if highest_bid else list.price
+    return render(request, "auctions/closedlistings.html", {
+        "listing": closed_listings,
+    })

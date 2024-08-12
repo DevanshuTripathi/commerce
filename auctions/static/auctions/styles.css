@@ -43,3 +43,7 @@ button {
     padding: 10px 20px;
     font-size: 18px;
 }
+
+.messages{
+    list-style-type: none;
+}
