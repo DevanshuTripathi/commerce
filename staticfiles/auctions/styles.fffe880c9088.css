@@ -1,0 +1,49 @@
+body {
+    padding: 10px;
+}
+
+.list-section {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+}
+ 
+.list-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    text-align: center;
+    max-width: 275px;
+}
+
+img{
+    height: 300px;
+}
+.img {
+    max-width: 100%;
+    height: auto;
+}
+ 
+h2 {
+    font-size: 24px;
+    margin: 10px 0;
+}
+ 
+p {
+    font-size: 16px;
+    margin: 8px 0;
+}
+ 
+button {
+    background-color: blue;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 18px;
+}
+
+.messages{
+    list-style-type: none;
+}

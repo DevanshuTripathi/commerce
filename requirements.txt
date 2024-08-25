@@ -9,3 +9,4 @@ idna==3.7
 certifi==2024.7.4
 setuptools==70.0.0
 wheel==0.43.0
+whitenoise==6.7.0
