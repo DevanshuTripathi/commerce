@@ -50,11 +50,11 @@ WSGI_APPLICATION = 'commerce.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.armatyplonvvscpdckpt',
-        'PASSWORD': 'DTBlufftunic@2005',
-        'HOST': 'aws-0-ap-south-1.pooler.supabase.com',
-        'PORT': '6543',  
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),  # Use the port number provided by Supabase
     }
 }
 
